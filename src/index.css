@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 220 18% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 220 16% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 16% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 189 95% 52%;
+    --primary-foreground: 220 18% 8%;
+
+    --secondary: 220 14% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 220 14% 18%;
+    --muted-foreground: 217 10% 60%;
+
+    --accent: 45 93% 58%;
+    --accent-foreground: 220 18% 8%;
+
+    --success: 142 76% 45%;
+    --success-foreground: 210 40% 98%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 14% 20%;
+    --input: 220 14% 20%;
+    --ring: 189 95% 52%;
+
+    --radius: 0.5rem;
+
+    --chart-1: 189 95% 52%;
+    --chart-2: 142 76% 45%;
+    --chart-3: 0 72% 51%;
+    --chart-4: 45 93% 58%;
+    --chart-5: 263 70% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Financial number styling */
+  .mono-num {
+    font-variant-numeric: tabular-nums;
+    font-family: ui-monospace, monospace;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
