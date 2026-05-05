@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Market Pulse Lambda Functions & API Gateway
+
+Parameters:
+  CacheUrl:
+    Type: String
+    Description: Redis ElastiCache endpoint
+    Default: localhost
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  SubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: python3.10
+    Environment:
+      Variables:
+        CACHE_URL: !Ref CacheUrl
+
+Resources:
+  # API Gateway (HTTP API - much cheaper than REST API)
+  MarketPulseApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: v1
+      CorsConfiguration:
+        AllowOrigins:
+          - "https://dt3aa2rfaa1vw.cloudfront.net"
+          - "http://localhost:5173"
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+
+  # Lambda Security Group (needs access to ElastiCache)
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Lambda SG for VPC access
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: "0.0.0.0/0"
+
+  # ── fetch_price Lambda ──────────────────────────────────────────────────────
+  FetchPriceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: mpd-fetch-price
+      CodeUri: backend/lambdas/fetch_price/
+      Handler: lambda_function.lambda_handler
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref LambdaSecurityGroup
+        SubnetIds: !Ref SubnetIds
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonElastiCacheFullAccess
+      Events:
+        GetPrice:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref MarketPulseApi
+            Path: /price/{ticker}
+            Method: GET
+
+  # ── fetch_news Lambda ───────────────────────────────────────────────────────
+  FetchNewsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: mpd-fetch-news
+      CodeUri: backend/lambdas/fetch_news/
+      Handler: lambda_function.lambda_handler
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref LambdaSecurityGroup
+        SubnetIds: !Ref SubnetIds
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonElastiCacheFullAccess
+      Events:
+        GetNews:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref MarketPulseApi
+            Path: /news/{ticker}
+            Method: GET
+
+Outputs:
+  LambdaApiEndpoint:
+    Description: API Gateway endpoint URL for Lambda functions
+    Value: !Sub "https://${MarketPulseApi}.execute-api.${AWS::Region}.amazonaws.com/v1"

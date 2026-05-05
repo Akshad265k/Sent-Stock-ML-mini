@@ -1,0 +1,99 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: RDS PostgreSQL, ElastiCache Redis, and Secrets for Market Pulse Dashboard
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  SubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+  ECSSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+
+Resources:
+  # Database Credentials Secret
+  DBSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: mpd/backend/db-credentials-v2
+      Description: Auto-generated credentials for the PostgreSQL DB
+      GenerateSecretString:
+        SecretStringTemplate: '{"username":"postgres"}'
+        GenerateStringKey: "password"
+        PasswordLength: 16
+        ExcludeCharacters: "\"@/\\"
+
+  # Security Groups
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow PostgreSQL access from ECS
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !Ref ECSSecurityGroupId
+
+  CacheSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow Redis access from ECS
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 6379
+          ToPort: 6379
+          SourceSecurityGroupId: !Ref ECSSecurityGroupId
+
+  # Subnet Groups
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for RDS
+      SubnetIds: !Ref SubnetIds
+
+  CacheSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: Subnet group for Redis
+      SubnetIds: !Ref SubnetIds
+
+  # PostgreSQL RDS Instance
+  PostgresDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: mpd-postgres-v2
+      AllocatedStorage: '20'
+      DBInstanceClass: db.t3.micro
+      Engine: postgres
+      EngineVersion: '16.10'
+      MasterUsername: '{{resolve:secretsmanager:mpd/backend/db-credentials-v2:SecretString:username}}'
+      MasterUserPassword: '{{resolve:secretsmanager:mpd/backend/db-credentials-v2:SecretString:password}}'
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      VPCSecurityGroups:
+        - !Ref DBSecurityGroup
+      PubliclyAccessible: false
+      StorageType: gp2
+
+  # Redis ElastiCache Cluster
+  RedisCache:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      ClusterName: mpd-cache
+      CacheNodeType: cache.t3.micro
+      Engine: redis
+      NumCacheNodes: 1
+      CacheSubnetGroupName: !Ref CacheSubnetGroup
+      VpcSecurityGroupIds:
+        - !Ref CacheSecurityGroup
+
+Outputs:
+  DBEndpoint:
+    Description: PostgreSQL Endpoint
+    Value: !GetAtt PostgresDB.Endpoint.Address
+  RedisEndpoint:
+    Description: Redis Endpoint
+    Value: !GetAtt RedisCache.RedisEndpoint.Address
+  DBSecretArn:
+    Description: Secrets Manager ARN for DB Credentials
+    Value: !Ref DBSecret

@@ -368,6 +368,7 @@ const Index = () => {
         isOpen={isPortfolioModalOpen}
         onClose={() => setPortfolioModalOpen(false)}
         onSave={addToPortfolio}
+        currentPrice={selectedStock?.currentPrice}
       />
     </div>
   );

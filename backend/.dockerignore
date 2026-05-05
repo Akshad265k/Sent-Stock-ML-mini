@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+best_sentiment_model_1.keras
+finbert_tf_finetuned.pb
+finbert_tf_finetuned_1.zip
+all-data.csv
+finbert_training_data.csv

@@ -1,0 +1,56 @@
+{
+  "family": "market-pulse-backend",
+  "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::209757840945:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::209757840945:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "market-pulse-backend",
+      "image": "209757840945.dkr.ecr.ap-south-1.amazonaws.com/market-pulse-backend:latest",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "LAMBDA_API_URL",
+          "value": "https://ywl7r9swcg.execute-api.ap-south-1.amazonaws.com/v1"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "mpd-postgres-v2.czc4wysasy08.ap-south-1.rds.amazonaws.com"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/mpd/backend",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    },
+    {
+      "name": "xray-daemon",
+      "image": "amazon/aws-xray-daemon",
+      "cpu": 32,
+      "memoryReservation": 256,
+      "portMappings": [
+        {
+          "containerPort": 2000,
+          "hostPort": 2000,
+          "protocol": "udp"
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "1024",
+  "memory": "2048"
+}
