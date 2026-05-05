@@ -41,11 +41,11 @@ jobs:
 
     - name: Fetch API URL from Parameter Store
       run: |
-        API_URL=$(aws ssm get-parameter --name "/mpd/frontend/VITE_API_BASE_URL" --query "Parameter.Value" --output text)
-        echo "VITE_API_BASE_URL=$API_URL" > .env.production
+        echo "VITE_API_BASE_URL=$(aws ssm get-parameter --name "/mpd/frontend/VITE_API_BASE_URL" --query "Parameter.Value" --output text)" > .env.production
 
     - name: Build Frontend
-      run: npm run build
+      run: |
+        npm run build
       env:
         CI: false
 
