@@ -279,6 +279,7 @@ from transformers import BertTokenizer, BertForSequenceClassification, pipeline
 from yahooquery import search
 import numpy as np
 
+# Market Pulse Backend - AWS ECS Deployment
 import os
 import requests
 from database import init_db, User, Holding as DBHolding
