@@ -20,72 +20,72 @@ const CloudInfrastructure = () => {
     {
       title: "Amazon CloudFront",
       category: "Content Delivery",
-      description: "Global CDN serving the frontend with low latency and high transfer speeds via edge locations.",
+      description: "Serves the React app from edge locations using Distribution E3FOMHOPSEVE4Y. Handles SSL termination and global caching.",
       icon: <Globe className="w-8 h-8 text-blue-400" />,
-      stats: "Global Reach",
+      stats: "ap-south-1 Edge",
       gradient: "from-blue-500/20 to-cyan-500/20",
       href: "https://console.aws.amazon.com/cloudfront/v3/home"
     },
     {
       title: "AWS S3",
       category: "Storage",
-      description: "Durable object storage hosting the static React application assets and production builds.",
+      description: "Hosts the static production bundle in bucket mpd-frontend-209757840945. Integrates with GitHub Actions for automated sync.",
       icon: <Layers className="w-8 h-8 text-orange-400" />,
-      stats: "99.999999999% Durability",
+      stats: "S3 Standard",
       gradient: "from-orange-500/20 to-yellow-500/20",
       href: "https://console.aws.amazon.com/s3/home?region=ap-south-1"
     },
     {
       title: "AWS ECS Fargate",
       category: "Compute",
-      description: "Serverless container orchestration running the FastAPI backend and FinBERT AI model inference.",
+      description: "Runs the FastAPI backend and FinBERT model in containers within mpd-cluster. Uses task-definition market-pulse-backend.",
       icon: <Box className="w-8 h-8 text-orange-500" />,
-      stats: "Autoscaling Cluster",
+      stats: "Fargate v1.4.0",
       gradient: "from-orange-600/20 to-red-600/20",
       href: "https://console.aws.amazon.com/ecs/v2/clusters/mpd-cluster/services?region=ap-south-1"
     },
     {
       title: "Application Load Balancer",
       category: "Networking",
-      description: "Intelligent traffic distribution across multiple ECS tasks ensuring high availability and fault tolerance.",
+      description: "The entry point (mpd-backend-alb-1607763580) that routes traffic to ECS tasks. Monitors service health and manages SSL.",
       icon: <Server className="w-8 h-8 text-blue-500" />,
-      stats: "Dynamic Routing",
+      stats: "Active State",
       gradient: "from-blue-600/20 to-indigo-600/20",
       href: "https://console.aws.amazon.com/ec2/v2/home?region=ap-south-1#LoadBalancers:"
     },
     {
       title: "Amazon RDS (PostgreSQL)",
       category: "Database",
-      description: "Managed relational database storing user portfolios, watchlists, and historical analysis logs.",
+      description: "Stores portfolio data in mpd-postgres-v2. Authenticates via Secrets Manager (mpd/backend/db-credentials-v2).",
       icon: <Database className="w-8 h-8 text-blue-600" />,
-      stats: "Multi-AZ Deployment",
+      stats: "db.t3.micro",
       gradient: "from-blue-700/20 to-purple-700/20",
       href: "https://console.aws.amazon.com/rds/home?region=ap-south-1#databases:"
     },
     {
       title: "Amazon ElastiCache",
       category: "Caching",
-      description: "In-memory Redis cluster used by Lambdas and Backend for rapid stock price and news caching.",
+      description: "A Redis cluster (mpd-cache) used to store technical indicators and news sentiment to reduce API latency.",
       icon: <Zap className="w-8 h-8 text-red-500" />,
-      stats: "Sub-millisecond Latency",
+      stats: "cache.t3.micro",
       gradient: "from-red-500/20 to-pink-500/20",
       href: "https://console.aws.amazon.com/elasticache/home?region=ap-south-1#redis:"
     },
     {
       title: "AWS Lambda",
       category: "Serverless",
-      description: "Event-driven functions that fetch real-time financial data and news headlines on demand.",
+      description: "Managed via SAM. Specifically used for mpd-fetch-price and mpd-fetch-news to handle bursts in traffic efficiently.",
       icon: <Cpu className="w-8 h-8 text-yellow-500" />,
-      stats: "Pay-per-use Scaling",
+      stats: "Python 3.10",
       gradient: "from-yellow-500/20 to-orange-500/20",
       href: "https://console.aws.amazon.com/lambda/home?region=ap-south-1#/functions"
     },
     {
       title: "GitHub Actions",
       category: "CI/CD",
-      description: "Automated pipelines for testing, Dockerizing the backend, and deploying frontend updates to S3.",
+      description: "Automated workflows (backend-deploy.yml & frontend-deploy.yml) that build, test, and deploy to AWS on every push.",
       icon: <GitBranch className="w-8 h-8 text-white" />,
-      stats: "Automated Deployments",
+      stats: "2 Workflows",
       gradient: "from-gray-500/20 to-slate-500/20",
       href: "https://github.com/Akshad265k/Sent-Stock-ML-mini/actions"
     }
