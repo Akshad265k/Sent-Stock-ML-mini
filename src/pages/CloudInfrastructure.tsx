@@ -63,24 +63,6 @@ const CloudInfrastructure = () => {
       href: "https://console.aws.amazon.com/rds/home?region=ap-south-1#databases:"
     },
     {
-      title: "Amazon ElastiCache",
-      category: "Caching",
-      description: "A Redis cluster (mpd-cache) used to store technical indicators and news sentiment to reduce API latency.",
-      icon: <Zap className="w-8 h-8 text-red-500" />,
-      stats: "cache.t3.micro",
-      gradient: "from-red-500/20 to-pink-500/20",
-      href: "https://console.aws.amazon.com/elasticache/home?region=ap-south-1#redis:"
-    },
-    {
-      title: "AWS Lambda",
-      category: "Serverless",
-      description: "Managed via SAM. Specifically used for mpd-fetch-price and mpd-fetch-news to handle bursts in traffic efficiently.",
-      icon: <Cpu className="w-8 h-8 text-yellow-500" />,
-      stats: "Python 3.10",
-      gradient: "from-yellow-500/20 to-orange-500/20",
-      href: "https://console.aws.amazon.com/lambda/home?region=ap-south-1#/functions"
-    },
-    {
       title: "GitHub Actions",
       category: "CI/CD",
       description: "Automated workflows (backend-deploy.yml & frontend-deploy.yml) that build, test, and deploy to AWS on every push.",
