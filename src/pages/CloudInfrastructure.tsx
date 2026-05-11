@@ -23,7 +23,8 @@ const CloudInfrastructure = () => {
       description: "Global CDN serving the frontend with low latency and high transfer speeds via edge locations.",
       icon: <Globe className="w-8 h-8 text-blue-400" />,
       stats: "Global Reach",
-      gradient: "from-blue-500/20 to-cyan-500/20"
+      gradient: "from-blue-500/20 to-cyan-500/20",
+      href: "https://console.aws.amazon.com/cloudfront/v3/home"
     },
     {
       title: "AWS S3",
@@ -31,7 +32,8 @@ const CloudInfrastructure = () => {
       description: "Durable object storage hosting the static React application assets and production builds.",
       icon: <Layers className="w-8 h-8 text-orange-400" />,
       stats: "99.999999999% Durability",
-      gradient: "from-orange-500/20 to-yellow-500/20"
+      gradient: "from-orange-500/20 to-yellow-500/20",
+      href: "https://console.aws.amazon.com/s3/home?region=ap-south-1"
     },
     {
       title: "AWS ECS Fargate",
@@ -39,7 +41,8 @@ const CloudInfrastructure = () => {
       description: "Serverless container orchestration running the FastAPI backend and FinBERT AI model inference.",
       icon: <Box className="w-8 h-8 text-orange-500" />,
       stats: "Autoscaling Cluster",
-      gradient: "from-orange-600/20 to-red-600/20"
+      gradient: "from-orange-600/20 to-red-600/20",
+      href: "https://console.aws.amazon.com/ecs/v2/clusters/mpd-cluster/services?region=ap-south-1"
     },
     {
       title: "Application Load Balancer",
@@ -47,7 +50,8 @@ const CloudInfrastructure = () => {
       description: "Intelligent traffic distribution across multiple ECS tasks ensuring high availability and fault tolerance.",
       icon: <Server className="w-8 h-8 text-blue-500" />,
       stats: "Dynamic Routing",
-      gradient: "from-blue-600/20 to-indigo-600/20"
+      gradient: "from-blue-600/20 to-indigo-600/20",
+      href: "https://console.aws.amazon.com/ec2/v2/home?region=ap-south-1#LoadBalancers:"
     },
     {
       title: "Amazon RDS (PostgreSQL)",
@@ -55,7 +59,8 @@ const CloudInfrastructure = () => {
       description: "Managed relational database storing user portfolios, watchlists, and historical analysis logs.",
       icon: <Database className="w-8 h-8 text-blue-600" />,
       stats: "Multi-AZ Deployment",
-      gradient: "from-blue-700/20 to-purple-700/20"
+      gradient: "from-blue-700/20 to-purple-700/20",
+      href: "https://console.aws.amazon.com/rds/home?region=ap-south-1#databases:"
     },
     {
       title: "Amazon ElastiCache",
@@ -63,7 +68,8 @@ const CloudInfrastructure = () => {
       description: "In-memory Redis cluster used by Lambdas and Backend for rapid stock price and news caching.",
       icon: <Zap className="w-8 h-8 text-red-500" />,
       stats: "Sub-millisecond Latency",
-      gradient: "from-red-500/20 to-pink-500/20"
+      gradient: "from-red-500/20 to-pink-500/20",
+      href: "https://console.aws.amazon.com/elasticache/home?region=ap-south-1#redis:"
     },
     {
       title: "AWS Lambda",
@@ -71,7 +77,8 @@ const CloudInfrastructure = () => {
       description: "Event-driven functions that fetch real-time financial data and news headlines on demand.",
       icon: <Cpu className="w-8 h-8 text-yellow-500" />,
       stats: "Pay-per-use Scaling",
-      gradient: "from-yellow-500/20 to-orange-500/20"
+      gradient: "from-yellow-500/20 to-orange-500/20",
+      href: "https://console.aws.amazon.com/lambda/home?region=ap-south-1#/functions"
     },
     {
       title: "GitHub Actions",
@@ -79,7 +86,8 @@ const CloudInfrastructure = () => {
       description: "Automated pipelines for testing, Dockerizing the backend, and deploying frontend updates to S3.",
       icon: <GitBranch className="w-8 h-8 text-white" />,
       stats: "Automated Deployments",
-      gradient: "from-gray-500/20 to-slate-500/20"
+      gradient: "from-gray-500/20 to-slate-500/20",
+      href: "https://github.com/Akshad265k/Sent-Stock-ML-mini/actions"
     }
   ];
 
@@ -117,18 +125,24 @@ const CloudInfrastructure = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => (
-            <motion.div
+            <motion.a
               key={service.title}
+              href={service.href}
+              target="_blank"
+              rel="noreferrer"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}
-              className={`relative group p-6 rounded-2xl border border-white/10 bg-gradient-to-br ${service.gradient} backdrop-blur-md hover:border-primary/50 transition-all duration-300`}
+              className={`relative group p-6 rounded-2xl border border-white/10 bg-gradient-to-br ${service.gradient} backdrop-blur-md hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 block`}
             >
-              <div className="mb-4">{service.icon}</div>
+              <div className="mb-4 flex justify-between items-start">
+                {service.icon}
+                <ExternalLink className="w-4 h-4 text-white/20 group-hover:text-primary transition-colors" />
+              </div>
               <div className="text-xs font-bold text-primary mb-1 uppercase tracking-wider">
                 {service.category}
               </div>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors flex items-center gap-2">
                 {service.title}
               </h3>
               <p className="text-sm text-gray-400 leading-relaxed mb-4">
@@ -138,7 +152,7 @@ const CloudInfrastructure = () => {
                 <span className="text-[10px] font-mono text-gray-500 uppercase">{service.stats}</span>
                 <ShieldCheck className="w-4 h-4 text-green-500/50" />
               </div>
-            </motion.div>
+            </motion.a>
           ))}
         </div>
 
