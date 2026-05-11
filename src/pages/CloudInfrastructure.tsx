@@ -1,0 +1,205 @@
+import { Header } from "@/components/Header";
+import { 
+  Cloud, 
+  Cpu, 
+  Database, 
+  Globe, 
+  Layers, 
+  Zap, 
+  Box, 
+  ShieldCheck, 
+  GitBranch, 
+  Server,
+  ArrowRight,
+  ExternalLink
+} from "lucide-react";
+import { motion } from "framer-motion";
+
+const CloudInfrastructure = () => {
+  const services = [
+    {
+      title: "Amazon CloudFront",
+      category: "Content Delivery",
+      description: "Global CDN serving the frontend with low latency and high transfer speeds via edge locations.",
+      icon: <Globe className="w-8 h-8 text-blue-400" />,
+      stats: "Global Reach",
+      gradient: "from-blue-500/20 to-cyan-500/20"
+    },
+    {
+      title: "AWS S3",
+      category: "Storage",
+      description: "Durable object storage hosting the static React application assets and production builds.",
+      icon: <Layers className="w-8 h-8 text-orange-400" />,
+      stats: "99.999999999% Durability",
+      gradient: "from-orange-500/20 to-yellow-500/20"
+    },
+    {
+      title: "AWS ECS Fargate",
+      category: "Compute",
+      description: "Serverless container orchestration running the FastAPI backend and FinBERT AI model inference.",
+      icon: <Box className="w-8 h-8 text-orange-500" />,
+      stats: "Autoscaling Cluster",
+      gradient: "from-orange-600/20 to-red-600/20"
+    },
+    {
+      title: "Application Load Balancer",
+      category: "Networking",
+      description: "Intelligent traffic distribution across multiple ECS tasks ensuring high availability and fault tolerance.",
+      icon: <Server className="w-8 h-8 text-blue-500" />,
+      stats: "Dynamic Routing",
+      gradient: "from-blue-600/20 to-indigo-600/20"
+    },
+    {
+      title: "Amazon RDS (PostgreSQL)",
+      category: "Database",
+      description: "Managed relational database storing user portfolios, watchlists, and historical analysis logs.",
+      icon: <Database className="w-8 h-8 text-blue-600" />,
+      stats: "Multi-AZ Deployment",
+      gradient: "from-blue-700/20 to-purple-700/20"
+    },
+    {
+      title: "Amazon ElastiCache",
+      category: "Caching",
+      description: "In-memory Redis cluster used by Lambdas and Backend for rapid stock price and news caching.",
+      icon: <Zap className="w-8 h-8 text-red-500" />,
+      stats: "Sub-millisecond Latency",
+      gradient: "from-red-500/20 to-pink-500/20"
+    },
+    {
+      title: "AWS Lambda",
+      category: "Serverless",
+      description: "Event-driven functions that fetch real-time financial data and news headlines on demand.",
+      icon: <Cpu className="w-8 h-8 text-yellow-500" />,
+      stats: "Pay-per-use Scaling",
+      gradient: "from-yellow-500/20 to-orange-500/20"
+    },
+    {
+      title: "GitHub Actions",
+      category: "CI/CD",
+      description: "Automated pipelines for testing, Dockerizing the backend, and deploying frontend updates to S3.",
+      icon: <GitBranch className="w-8 h-8 text-white" />,
+      stats: "Automated Deployments",
+      gradient: "from-gray-500/20 to-slate-500/20"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-12">
+        <div className="text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4"
+          >
+            <Cloud className="w-3 h-3" />
+            <span>Cloud-Native Architecture</span>
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent"
+          >
+            Market Pulse Infrastructure
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-muted-foreground text-lg max-w-2xl mx-auto"
+          >
+            A high-performance, distributed system built on AWS for institutional-grade financial analytics and AI-powered sentiment tracking.
+          </motion.p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {services.map((service, index) => (
+            <motion.div
+              key={service.title}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.1 }}
+              className={`relative group p-6 rounded-2xl border border-white/10 bg-gradient-to-br ${service.gradient} backdrop-blur-md hover:border-primary/50 transition-all duration-300`}
+            >
+              <div className="mb-4">{service.icon}</div>
+              <div className="text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                {service.category}
+              </div>
+              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                {service.title}
+              </h3>
+              <p className="text-sm text-gray-400 leading-relaxed mb-4">
+                {service.description}
+              </p>
+              <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                <span className="text-[10px] font-mono text-gray-500 uppercase">{service.stats}</span>
+                <ShieldCheck className="w-4 h-4 text-green-500/50" />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="mt-20 p-8 rounded-3xl border border-primary/20 bg-primary/5 relative overflow-hidden group"
+        >
+          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Cloud className="w-64 h-64 text-primary" />
+          </div>
+          
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <h2 className="text-3xl font-bold mb-4">Architecture Flow</h2>
+              <p className="text-gray-400 max-w-xl mb-6">
+                Requests flow through CloudFront to the Load Balancer, which scales the ECS backend dynamically. 
+                Data-heavy tasks are offloaded to Lambda functions, while results are cached in Redis for instantaneous user experiences.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2 text-sm bg-white/5 px-4 py-2 rounded-lg border border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span>Production Ready</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm bg-white/5 px-4 py-2 rounded-lg border border-white/10">
+                  <ShieldCheck className="w-4 h-4 text-primary" />
+                  <span>AWS Well-Architected</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-3">
+              <a 
+                href="https://github.com/Akshad265k/Sent-Stock-ML-mini/actions" 
+                target="_blank" 
+                rel="noreferrer"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20"
+              >
+                <span>View CI/CD Pipeline</span>
+                <GitBranch className="w-4 h-4" />
+              </a>
+              <a 
+                href="https://ap-south-1.console.aws.amazon.com/" 
+                target="_blank" 
+                rel="noreferrer"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all border border-white/10"
+              >
+                <span>AWS Console</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        </motion.div>
+
+        <footer className="mt-20 text-center text-gray-600 text-sm">
+          <p>© 2026 Market Pulse Cloud • Build v1.0.4 • AWS Region: ap-south-1</p>
+        </footer>
+      </main>
+    </div>
+  );
+};
+
+export default CloudInfrastructure;

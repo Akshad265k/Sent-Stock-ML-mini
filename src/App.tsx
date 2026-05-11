@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import PortfolioPage from "./pages/PortfolioPage";
+import CloudInfrastructure from "./pages/CloudInfrastructure";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/infrastructure" element={<CloudInfrastructure />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

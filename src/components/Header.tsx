@@ -43,6 +43,15 @@ export const Header = () => {
           >
             About
           </Link>
+          <Link
+            to="/infrastructure"
+            className={cn(
+              "text-sm font-medium transition-colors hover:text-primary border border-primary/20 bg-primary/5 px-3 py-1 rounded-full",
+              location.pathname === "/infrastructure" ? "text-primary" : "text-muted-foreground"
+            )}
+          >
+            Cloud
+          </Link>
         </nav>
       </div>
     </header>
