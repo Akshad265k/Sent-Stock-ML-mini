@@ -22,7 +22,9 @@ const App = () => (
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="/portfolio" element={<PortfolioPage />} />
-          <Route path="/infrastructure" element={<CloudInfrastructure />} />
+          {window.location.hostname === 'localhost' && (
+            <Route path="/infrastructure" element={<CloudInfrastructure />} />
+          )}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
