@@ -211,6 +211,7 @@ import PortfolioWidget from "@/components/PortfolioWidget";
 import PortfolioChart from "@/components/PortfolioChart";
 
 const Index = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
   const [selectedStock, setSelectedStock] = useState<StockData | null>(null);
   const [loading, setLoading] = useState(false);
   const [isPortfolioModalOpen, setPortfolioModalOpen] = useState(false);
@@ -242,7 +243,7 @@ const Index = () => {
   const handleSearch = async (ticker: string) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/api/predict", {
+      const response = await fetch(`${API_BASE_URL}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ticker }),

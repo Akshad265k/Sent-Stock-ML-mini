@@ -344,6 +344,7 @@ import { TrendingUp, Wallet, Percent, ArrowUpRight, ArrowDownRight } from "lucid
 import { Header } from "@/components/Header";
 
 export default function PortfolioPage() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
   const [portfolio, setPortfolio] = useState<PortfolioHolding[]>([]);
   const [stats, setStats] = useState<PortfolioResponse | null>(null);
 
@@ -358,7 +359,7 @@ export default function PortfolioPage() {
     if (portfolio.length === 0) return;
 
     const fetchStats = async () => {
-      const res = await fetch("http://localhost:8000/api/portfolio/analyze", {
+      const res = await fetch(`${API_BASE_URL}/portfolio/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ holdings: portfolio }),

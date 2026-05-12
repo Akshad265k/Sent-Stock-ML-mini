@@ -1,0 +1,13 @@
+# 🚀 Market Pulse: Live Cloud Endpoints
+
+## 🌐 Frontend Website (CloudFront)
+This is your main dashboard accessible to the public.
+Link: https://dt3aa2rfaa1vw.cloudfront.net
+
+## ⚙️ Backend API (Application Load Balancer)
+This powers the AI and data analysis. 
+Base URL: http://mpd-backend-alb-1607763580.ap-south-1.elb.amazonaws.com/
+API Status Endpoint: http://mpd-backend-alb-1607763580.ap-south-1.elb.amazonaws.com/api/status
+
+---
+Note: The "Cloud Infrastructure" showcase page is only visible when running the app on 'localhost' for security reasons.

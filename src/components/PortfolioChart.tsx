@@ -15,8 +15,9 @@ export default function PortfolioChart({ portfolio }: Props) {
     if (portfolio.length === 0) return;
 
     const fetchHistory = async () => {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
       // Step 1: call backend to analyze portfolio
-      const res = await fetch("http://localhost:8000/api/portfolio/analyze", {
+      const res = await fetch(`${API_BASE_URL}/portfolio/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ holdings: portfolio }),
