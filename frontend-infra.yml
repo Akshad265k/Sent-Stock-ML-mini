@@ -36,6 +36,10 @@ Resources:
             Id: S3Origin
             S3OriginConfig:
               OriginAccessIdentity: ""
+          - DomainName: mpd-backend-alb-1607763580.ap-south-1.elb.amazonaws.com
+            Id: ALBOrigin
+            CustomOriginConfig:
+              ProtocolPolicy: http-only
         Enabled: true
         DefaultRootObject: index.html
         DefaultCacheBehavior:
@@ -45,6 +49,26 @@ Resources:
             QueryString: false
             Cookies:
               Forward: none
+        CacheBehaviors:
+          - PathPattern: api/*
+            TargetOriginId: ALBOrigin
+            ViewerProtocolPolicy: https-only
+            ForwardedValues:
+              QueryString: true
+              Cookies:
+                Forward: all
+              Headers:
+                - Origin
+                - Access-Control-Request-Method
+                - Access-Control-Request-Headers
+            AllowedMethods:
+              - DELETE
+              - GET
+              - HEAD
+              - OPTIONS
+              - PATCH
+              - POST
+              - PUT
         CustomErrorResponses:
           - ErrorCode: 403
             ResponseCode: 200
