@@ -2,9 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* ========================================
+   Sent-Stock Design System
+   All colors MUST be HSL.
+   ======================================== */
 
 @layer base {
   :root {
@@ -39,7 +40,7 @@ All colors MUST be HSL.
     --input: 220 14% 20%;
     --ring: 189 95% 52%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --chart-1: 189 95% 52%;
     --chart-2: 142 76% 45%;
@@ -54,23 +55,219 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Premium selection colors */
+  ::selection {
+    background: hsl(189 95% 52% / 0.3);
+    color: hsl(210 40% 98%);
   }
 
   /* Financial number styling */
   .mono-num {
     font-variant-numeric: tabular-nums;
-    font-family: ui-monospace, monospace;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+/* ========================================
+   Utility Classes
+   ======================================== */
+
+@layer utilities {
+  /* Glassmorphism */
+  .glass {
+    background: hsl(220 16% 12% / 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(220 14% 20% / 0.5);
   }
 
-  body {
-    @apply bg-background text-foreground;
+  .glass-strong {
+    background: hsl(220 16% 12% / 0.8);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid hsl(220 14% 20% / 0.6);
   }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(189 95% 52%), hsl(142 76% 45%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-warm {
+    background: linear-gradient(135deg, hsl(45 93% 58%), hsl(0 72% 51%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glow effects */
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(189 95% 52% / 0.15), 0 0 60px hsl(189 95% 52% / 0.05);
+  }
+
+  .glow-success {
+    box-shadow: 0 0 20px hsl(142 76% 45% / 0.15), 0 0 60px hsl(142 76% 45% / 0.05);
+  }
+
+  .glow-danger {
+    box-shadow: 0 0 20px hsl(0 72% 51% / 0.15), 0 0 60px hsl(0 72% 51% / 0.05);
+  }
+
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(189 95% 52% / 0.5), hsl(142 76% 45% / 0.5), hsl(45 93% 58% / 0.5));
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    pointer-events: none;
+  }
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, hsl(220 14% 25%) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out forwards;
+}
+
+/* Stagger delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* ========================================
+   Custom Scrollbar
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(220 18% 8%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, hsl(189 95% 52% / 0.4), hsl(142 76% 45% / 0.4));
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, hsl(189 95% 52% / 0.6), hsl(142 76% 45% / 0.6));
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(189 95% 52% / 0.3) hsl(220 18% 8%);
+}
+
+/* Custom scrollbar variant for feed panels */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, hsl(189 95% 52% / 0.3), hsl(142 76% 45% / 0.3));
+  border-radius: 8px;
 }

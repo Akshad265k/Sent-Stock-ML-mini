@@ -1,0 +1,96 @@
+====================================================
+  MARKET PULSE — AWS SHUTDOWN LINKS
+  Follow this order top to bottom!
+====================================================
+
+STEP 1 — CloudFormation Stacks (Kills most things automatically)
+https://ap-south-1.console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks
+
+  Delete these stacks ONE AT A TIME in this order:
+    1. mpd-alb-ecs-stack      → Select → Actions → Delete
+    2. mpd-data-stack-v2      → Select → Actions → Delete  (wait for #1 to finish)
+    3. mpd-lambda-stack       → Select → Actions → Delete
+    4. mpd-frontend-stack     → Select → Actions → Delete
+
+  NOTE: If mpd-frontend-stack fails, empty the S3 bucket first (Step 3), then retry.
+
+----------------------------------------------------
+
+STEP 2 — ECR Docker Images
+https://ap-south-1.console.aws.amazon.com/ecr/repositories?region=ap-south-1
+
+  Select "market-pulse-backend" → Delete
+
+----------------------------------------------------
+
+STEP 3 — S3 Bucket (must EMPTY before deleting)
+https://s3.console.aws.amazon.com/s3/buckets
+
+  Find "mpd-frontend-..." → click it → Empty → then back → Delete
+
+----------------------------------------------------
+
+STEP 4 — CloudFront (must DISABLE before deleting, takes ~5 min)
+https://us-east-1.console.aws.amazon.com/cloudfront/v4/home#/distributions
+
+  Find dt3aa2rfaa1vw.cloudfront.net → Disable → wait 5 min → Delete
+
+----------------------------------------------------
+
+STEP 5 — RDS Database (only if CloudFormation didn't delete it)
+https://ap-south-1.console.aws.amazon.com/rds/home?region=ap-south-1#databases:
+
+  Select "mpd-postgres-v2" → Actions → Delete → uncheck "Create final snapshot"
+
+----------------------------------------------------
+
+STEP 6 — ElastiCache Redis (only if CloudFormation didn't delete it)
+https://ap-south-1.console.aws.amazon.com/elasticache/home?region=ap-south-1#/redis
+
+  Select "mpd-cache" → Delete
+
+----------------------------------------------------
+
+STEP 7 — Load Balancer (only if CloudFormation didn't delete it)
+https://ap-south-1.console.aws.amazon.com/ec2/v2/home?region=ap-south-1#LoadBalancers:
+
+  Select "mpd-backend-alb" → Actions → Delete
+
+----------------------------------------------------
+
+STEP 8 — Secrets Manager
+https://ap-south-1.console.aws.amazon.com/secretsmanager/listsecrets?region=ap-south-1
+
+  Select "mpd/backend/db-credentials-v2" → Actions → Delete secret
+
+----------------------------------------------------
+
+STEP 9 — SSM Parameter Store
+https://ap-south-1.console.aws.amazon.com/systems-manager/parameters?region=ap-south-1
+
+  Search "/mpd" → select all → Delete
+
+----------------------------------------------------
+
+STEP 10 — Lambda Functions (only if CloudFormation didn't delete them)
+https://ap-south-1.console.aws.amazon.com/lambda/home?region=ap-south-1#/functions
+
+  Delete: mpd-fetch-price
+  Delete: mpd-fetch-news
+
+----------------------------------------------------
+
+STEP 11 — GitHub Actions Secrets (stop CI/CD re-deploying)
+  Go to: GitHub Repo → Settings → Secrets and variables → Actions
+  Delete: AWS_ACCESS_KEY_ID
+  Delete: AWS_SECRET_ACCESS_KEY
+
+----------------------------------------------------
+
+FINAL CHECK — Make sure bill is $0
+https://us-east-1.console.aws.amazon.com/billing/home#/
+
+====================================================
+  TIP: Step 1 (CloudFormation) does 80% of the work.
+  Steps 5, 6, 7 are likely already done after Step 1.
+====================================================
