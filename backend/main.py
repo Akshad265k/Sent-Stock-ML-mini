@@ -275,9 +275,9 @@ from pydantic import BaseModel
 from typing import List
 import yfinance as yf
 from gnews import GNews
-from transformers import BertTokenizer, BertForSequenceClassification, pipeline
 from yahooquery import search
 import numpy as np
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Market Pulse Backend - AWS ECS Deployment
 import os
@@ -307,18 +307,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-print("Loading FinBERT...")
-try:
-    finbert = BertForSequenceClassification.from_pretrained(
-        'yiyanghkust/finbert-tone', num_labels=3)
-    tokenizer = BertTokenizer.from_pretrained('yiyanghkust/finbert-tone')
-    nlp = pipeline("sentiment-analysis",
-                   model=finbert, tokenizer=tokenizer, device=-1)
-    score_map = {'Positive': 1, 'Neutral': 0, 'Negative': -1}
-    print("FinBERT Loaded")
-except Exception as e:
-    print("FinBERT Load Failed:", e)
+# Initialize lightweight local VADER and setup score map
+vader_analyzer = SentimentIntensityAnalyzer()
+score_map = {'Positive': 1, 'Neutral': 0, 'Negative': -1}
+HF_API_URL = "https://api-inference.huggingface.co/models/yiyanghkust/finbert-tone"
 
+def get_vader_sentiment(text: str):
+    try:
+        vs = vader_analyzer.polarity_scores(text)
+        compound = vs['compound']
+        if compound >= 0.05:
+            return 1, "Positive"
+        elif compound <= -0.05:
+            return -1, "Negative"
+        else:
+            return 0, "Neutral"
+    except Exception as e:
+        print("Vader Sentiment Error:", e)
+        return 0, "Neutral"
 
 #
 def resolve_ticker(query: str):
@@ -340,11 +346,20 @@ def resolve_ticker(query: str):
 
 
 def get_sentiment(text: str):
+    # Try Hugging Face Inference API first (free and fast)
     try:
-        res = nlp(text[:512])[0]
-        return score_map[res["label"]], res["label"]
-    except:
-        return 0, "Neutral"
+        response = requests.post(HF_API_URL, json={"inputs": text[:512]}, timeout=3)
+        if response.status_code == 200:
+            res_data = response.json()
+            if isinstance(res_data, list) and len(res_data) > 0:
+                predictions = res_data[0]
+                best_pred = max(predictions, key=lambda x: x["score"])
+                label = best_pred["label"].capitalize()
+                return score_map.get(label, 0), label
+    except Exception as e:
+        print("HF API Sentiment Error, falling back to VADER:", e)
+    
+    return get_vader_sentiment(text)
 
 
 def analyze_technicals(ticker: str):
