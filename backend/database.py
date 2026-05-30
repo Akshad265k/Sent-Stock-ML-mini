@@ -24,7 +24,8 @@ def get_db_credentials():
         return f"postgresql://{secret['username']}:{secret['password']}@{host}:5432/postgres"
     except Exception as e:
         print(f"Warning: Could not fetch secrets from AWS. Using local SQLite fallback. Error: {e}")
-        return "sqlite:///local_dev.db"
+        db_path = "/tmp/local_dev.db" if os.environ.get("VERCEL") else "local_dev.db"
+        return f"sqlite:///{db_path}"
 
 db_url = get_db_credentials()
 
@@ -32,7 +33,8 @@ if db_url.startswith("postgres"):
     from playhouse.db_url import connect
     db = connect(db_url)
 else:
-    db = SqliteDatabase('local_dev.db')
+    db_path = "/tmp/local_dev.db" if os.environ.get("VERCEL") else "local_dev.db"
+    db = SqliteDatabase(db_path)
 
 class BaseModel(Model):
     class Meta:
